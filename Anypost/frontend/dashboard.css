@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: "Inter";
+  font-family: "Inter", sans-serif;
   background-color: #f3f4f6;
   color: #1f2937;
 }
@@ -189,6 +189,7 @@ a {
 .tickets-table tbody tr {
   display: table;
   width: 100%;
+  table-layout: fixed;
 }
 
 .tickets-table th,
@@ -281,7 +282,7 @@ a {
   align-items: center;
 }
 
-.no-results-message.hidden {
+.hidden {
   display: none;
 }
 
@@ -298,4 +299,60 @@ a {
 }
 .no-results-message .message-subtitle {
   color: #9ca3af;
+}
+
+/* New Ticket Form Styles */
+.form-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: "Inter", sans-serif;
+  transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+}
+
+.submit-btn {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+  background-color: #1d4ed8;
 }

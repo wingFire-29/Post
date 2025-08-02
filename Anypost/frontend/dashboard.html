@@ -7,7 +7,7 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
@@ -29,65 +29,79 @@
           <span class="sidebar-logo-text">QuickDesk</span>
         </div>
         <nav class="sidebar-nav">
-          <a href="#" class="nav-item active">
+          <a href="#" class="nav-item active" id="nav-dashboard">
             <i class="fa-solid fa-gauge-high nav-icon"></i>
             <span>Dashboard</span>
           </a>
-          <a href="#" class="nav-item">
+          <a href="#" class="nav-item" id="nav-new-ticket">
             <i class="fa-solid fa-ticket nav-icon"></i>
             <span>New Ticket</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i class="fa-solid fa-flag nav-icon"></i>
-            <span>My Tickets</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i class="fa-solid fa-bell nav-icon"></i>
-            <span>Notifications</span>
-          </a>
-          <a href="#" class="nav-item">
-            <i class="fa-solid fa-user nav-icon"></i>
-            <span>Profile</span>
           </a>
         </nav>
       </aside>
 
       <main class="main-content">
-        <h1 class="main-title">Dashboard</h1>
-
-        <div class="filters-container">
-          <h2 class="filters-title">All Tickets</h2>
-          <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input
-              type="text"
-              id="searchInput"
-              placeholder="Search by user, agent, issue, or token..."
-              class="search-input"
-            />
+        <section id="dashboard-section">
+          <h1 class="main-title">Dashboard</h1>
+          <div class="filters-container">
+            <h2 class="filters-title">All Tickets</h2>
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by user, agent, issue, or token..."
+                class="search-input"
+              />
+            </div>
           </div>
-        </div>
-
-        <div class="table-container">
-          <table class="tickets-table">
-            <thead>
-              <tr>
-                <th>Token ID</th>
-                <th>User</th>
-                <th>Issue</th>
-                <th>Assigned Agent</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody id="tickets-table-body"></tbody>
-          </table>
-          <div id="no-results" class="no-results-message hidden">
-            <i class="fa-solid fa-inbox"></i>
-            <p class="message-title">No matching tickets found.</p>
-            <p class="message-subtitle">Try a different search term.</p>
+          <div class="table-container">
+            <table class="tickets-table">
+              <thead>
+                <tr>
+                  <th>Token ID</th>
+                  <th>User</th>
+                  <th>Issue</th>
+                  <th>Assigned Agent</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="tickets-table-body"></tbody>
+            </table>
+            <div id="no-results" class="no-results-message hidden">
+              <i class="fa-solid fa-inbox"></i>
+              <p class="message-title">No matching tickets found.</p>
+              <p class="message-subtitle">Try a different search term.</p>
+            </div>
           </div>
-        </div>
+        </section>
+
+        <section id="new-ticket-section" class="hidden">
+          <h1 class="main-title">Create New Ticket</h1>
+          <div class="form-container">
+            <form id="new-ticket-form">
+              <div class="form-group">
+                <label for="endUser">User Name</label>
+                <input type="text" id="endUser" name="endUser" required />
+              </div>
+              <div class="form-group">
+                <label for="issue">Issue Description</label>
+                <textarea id="issue" name="issue" rows="4" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="assignedAgent">Assign to Agent</label>
+                <select id="assignedAgent" name="assignedAgent" required>
+                  <option value="Parag">Parag Srivastav</option>
+                  <option value="Mohit">Navneet Singh</option>
+                  <option value="Mohit">Shubam Pandey</option>
+                  <option value="Mohit">Shivam</option>
+                </select>
+              </div>
+              <button type="submit" class="submit-btn">Create Ticket</button>
+            </form>
+          </div>
+        </section>
       </main>
     </div>
 

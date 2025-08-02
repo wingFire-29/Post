@@ -1,7 +1,7 @@
 const tickets = [
   {
     id: 1,
-    tokenId: 2024001,
+    tokenId: 2025001,
     endUser: "Shivam",
     issue: "Cannot login to my account after password reset.",
     status: "In Progress",
@@ -10,7 +10,7 @@ const tickets = [
   },
   {
     id: 2,
-    tokenId: 2024002,
+    tokenId: 2025002,
     endUser: "Shubham",
     issue: "Payment failed with a new credit card.",
     status: "Open",
@@ -19,7 +19,7 @@ const tickets = [
   },
   {
     id: 3,
-    tokenId: 2024003,
+    tokenId: 2025003,
     endUser: "Shivam",
     issue: "The main dashboard is loading very slowly.",
     status: "Closed",
@@ -28,7 +28,7 @@ const tickets = [
   },
   {
     id: 4,
-    tokenId: 2024004,
+    tokenId: 2025004,
     endUser: "Shubham",
     issue: "How can I upgrade my current subscription plan?",
     status: "Open",
@@ -37,19 +37,27 @@ const tickets = [
   },
   {
     id: 5,
-    tokenId: 2024005,
+    tokenId: 2025005,
     endUser: "Shivam",
     issue: "It would be great to have a dark mode option.",
     status: "In Progress",
     date: "2024-07-25",
     assignedAgent: "Parag",
   },
-  
 ];
 
 const tableBody = document.getElementById("tickets-table-body");
 const searchInput = document.getElementById("searchInput");
 const noResultsDiv = document.getElementById("no-results");
+
+const navDashboard = document.getElementById("nav-dashboard");
+const navNewTicket = document.getElementById("nav-new-ticket");
+const navLinks = document.querySelectorAll(".nav-item");
+
+const dashboardSection = document.getElementById("dashboard-section");
+const newTicketSection = document.getElementById("new-ticket-section");
+
+const newTicketForm = document.getElementById("new-ticket-form");
 
 const statusClasses = {
   Open: "status-open",
@@ -58,9 +66,13 @@ const statusClasses = {
 };
 
 const renderTickets = (ticketsToRender) => {
-  noResultsDiv.classList.toggle("hidden", ticketsToRender.length > 0);
+  const sortedTickets = ticketsToRender.sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
 
-  const ticketsHTML = ticketsToRender
+  noResultsDiv.classList.toggle("hidden", sortedTickets.length > 0);
+
+  const ticketsHTML = sortedTickets
     .map((ticket) => {
       const statusClass = statusClasses[ticket.status] || "status-default";
       return `
@@ -91,6 +103,48 @@ const handleSearch = () => {
   renderTickets(filtered);
 };
 
+const switchView = (targetId) => {
+  dashboardSection.classList.add("hidden");
+  newTicketSection.classList.add("hidden");
+
+  const sectionToShow = document.getElementById(targetId);
+  if (sectionToShow) {
+    sectionToShow.classList.remove("hidden");
+  }
+};
+
+const handleFormSubmit = (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(newTicketForm);
+  const newTicket = {
+    id: tickets.length + 1,
+    tokenId: 2025000 + tickets.length + 1,
+    endUser: formData.get("endUser"),
+    issue: formData.get("issue"),
+    status: "Open",
+    date: new Date().toISOString().split("T")[0],
+    assignedAgent: formData.get("assignedAgent"),
+  };
+
+  tickets.push(newTicket);
+  renderTickets(tickets);
+  newTicketForm.reset();
+  switchView("dashboard-section");
+};
+
 searchInput.addEventListener("keyup", handleSearch);
+
+navDashboard.addEventListener("click", (e) => {
+  e.preventDefault();
+  switchView("dashboard-section");
+});
+
+navNewTicket.addEventListener("click", (e) => {
+  e.preventDefault();
+  switchView("new-ticket-section");
+});
+
+newTicketForm.addEventListener("submit", handleFormSubmit);
 
 renderTickets(tickets);

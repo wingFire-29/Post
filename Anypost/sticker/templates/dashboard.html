@@ -2,6 +2,576 @@
 
 {% block content %}
 
-<h1>dashboard:{{request.user.username}}</h1>
-<a href="{% url 'logout' %}" class='btn btn-dark'>logout</a>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickDesk Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6;
+        color: #1f2937;
+      }
+      a {
+        text-decoration: none;
+      }
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+      .sidebar {
+        width: 256px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+      }
+      .sidebar-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        margin-bottom: 2rem;
+      }
+      .sidebar-logo-icon {
+        background-color: #dbeafe;
+        color: #2563eb;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .sidebar-logo-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+      }
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        color: #6b7280;
+        transition: background-color 0.2s, color 0.2s;
+      }
+      .nav-item:hover {
+        background-color: #f3f4f6;
+      }
+      .nav-item.active {
+        background-color: #eff6ff;
+        color: #1d4ed8;
+      }
+      .nav-item.active .nav-icon {
+        color: #2563eb;
+      }
+      .nav-icon {
+        width: 1.5rem;
+        text-align: center;
+      }
+      .sidebar-footer {
+        margin-top: auto;
+        padding: 1rem;
+        background-color: #f9fafb;
+        border-radius: 0.5rem;
+        text-align: center;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .main-content {
+        flex: 1;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+      }
+      .main-title {
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+      }
+      .filters-container {
+        background-color: #ffffff;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .filters-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #374151;
+      }
+      .search-box {
+        position: relative;
+        width: 100%;
+        max-width: 320px;
+      }
+      .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+      }
+      .search-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.75rem;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+      }
+      .search-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+      }
+      .table-container {
+        background-color: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 0;
+      }
+      .tickets-table {
+        width: 100%;
+        text-align: left;
+        border-collapse: collapse;
+      }
+      .tickets-table thead {
+        background-color: #f9fafb;
+      }
+      .tickets-table tbody {
+        display: block;
+        max-height: 60vh;
+        overflow-y: auto;
+      }
+      .tickets-table thead,
+      .tickets-table tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+      }
+      .tickets-table th,
+      .tickets-table td {
+        padding: 1rem 1.5rem;
+        white-space: nowrap;
+        font-size: 0.875rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .tickets-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+      .tickets-table th:nth-child(1),
+      .tickets-table td:nth-child(1) {
+        width: 12%;
+      }
+      .tickets-table th:nth-child(2),
+      .tickets-table td:nth-child(2) {
+        width: 18%;
+      }
+      .tickets-table th:nth-child(3),
+      .tickets-table td:nth-child(3) {
+        width: 30%;
+        white-space: normal;
+      }
+      .tickets-table th:nth-child(4),
+      .tickets-table td:nth-child(4) {
+        width: 18%;
+      }
+      .tickets-table th:nth-child(5),
+      .tickets-table td:nth-child(5) {
+        width: 12%;
+      }
+      .tickets-table th:nth-child(6),
+      .tickets-table td:nth-child(6) {
+        width: 10%;
+      }
+      .tickets-table tbody tr:hover {
+        background-color: #f9fafb;
+      }
+      .name {
+        font-weight: 500;
+        color: #111827;
+      }
+      .token-id {
+        font-weight: 500;
+        color: #2563eb;
+      }
+      .issue-text {
+        color: #1f2937;
+      }
+      .date-text {
+        color: #6b7280;
+      }
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .status-open {
+        background-color: #dcfce7;
+        color: #166534;
+      }
+      .status-in-progress {
+        background-color: #fef9c3;
+        color: #854d0e;
+      }
+      .status-closed {
+        background-color: #fee2e2;
+        color: #991b1b;
+      }
+      .no-results-message {
+        text-align: center;
+        padding: 4rem 1rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .hidden {
+        display: none;
+      }
+      .no-results-message .fa-inbox {
+        font-size: 3rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+      }
+      .no-results-message .message-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #6b7280;
+      }
+      .no-results-message .message-subtitle {
+        color: #9ca3af;
+      }
+      .form-container {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+      .form-group label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+      }
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        font-family: "Inter", sans-serif;
+        transition: all 0.2s;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+      }
+      .submit-btn {
+        background-color: #2563eb;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: background-color 0.2s;
+      }
+      .submit-btn:hover {
+        background-color: #1d4ed8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo-icon">
+            <i class="fa-solid fa-check-double fa-lg"></i>
+          </div>
+          <span class="sidebar-logo-text">QuickDesk</span>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" id="nav-dashboard">
+            <i class="fa-solid fa-gauge-high nav-icon"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item" id="nav-new-ticket">
+            <i class="fa-solid fa-ticket nav-icon"></i>
+            <span>New Ticket</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <section id="dashboard-section">
+          <h1 class="main-title">Dashboard</h1>
+          <div class="filters-container">
+            <h2 class="filters-title">All Tickets</h2>
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by user, agent, issue, or token..."
+                class="search-input"
+              />
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="tickets-table">
+              <thead>
+                <tr>
+                  <th>Token ID</th>
+                  <th>User</th>
+                  <th>Issue</th>
+                  <th>Assigned Agent</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="tickets-table-body"></tbody>
+            </table>
+            <div id="no-results" class="no-results-message hidden">
+              <i class="fa-solid fa-inbox"></i>
+              <p class="message-title">No matching tickets found.</p>
+              <p class="message-subtitle">Try a different search term.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="new-ticket-section" class="hidden">
+          <h1 class="main-title">Create New Ticket</h1>
+          <div class="form-container">
+            <form id="new-ticket-form">
+              <div class="form-group">
+                <label for="endUser">User Name</label>
+                <input type="text" id="endUser" name="endUser" required />
+              </div>
+              <div class="form-group">
+                <label for="issue">Issue Description</label>
+                <textarea id="issue" name="issue" rows="4" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="assignedAgent">Assign to Agent</label>
+                <select id="assignedAgent" name="assignedAgent" required>
+                  <option value="Parag">Parag Srivastav</option>
+                  <option value="Mohit">Navneet Singh</option>
+                  <option value="Mohit">Shubam Pandey</option>
+                  <option value="Mohit">Shivam Pundir</option>
+                </select>
+              </div>
+              <button type="submit" class="submit-btn">Create Ticket</button>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      const tickets = [
+        {
+          id: 1,
+          tokenId: 2025001,
+          endUser: "Shivam",
+          issue: "Cannot login to my account after password reset.",
+          status: "In Progress",
+          date: "2024-07-28",
+          assignedAgent: "Parag",
+        },
+        {
+          id: 2,
+          tokenId: 2025002,
+          endUser: "Shubham",
+          issue: "Payment failed with a new credit card.",
+          status: "Open",
+          date: "2024-07-28",
+          assignedAgent: "Mohit",
+        },
+        {
+          id: 3,
+          tokenId: 2025003,
+          endUser: "Shivam",
+          issue: "The main dashboard is loading very slowly.",
+          status: "Closed",
+          date: "2024-07-27",
+          assignedAgent: "Parag",
+        },
+        {
+          id: 4,
+          tokenId: 2025004,
+          endUser: "Shubham",
+          issue: "How can I upgrade my current subscription plan?",
+          status: "Open",
+          date: "2024-07-26",
+          assignedAgent: "Mohit",
+        },
+        {
+          id: 5,
+          tokenId: 2025005,
+          endUser: "Shivam",
+          issue: "It would be great to have a dark mode option.",
+          status: "In Progress",
+          date: "2024-07-25",
+          assignedAgent: "Parag",
+        },
+      ];
+
+      const tableBody = document.getElementById("tickets-table-body");
+      const searchInput = document.getElementById("searchInput");
+      const noResultsDiv = document.getElementById("no-results");
+
+      const navDashboard = document.getElementById("nav-dashboard");
+      const navNewTicket = document.getElementById("nav-new-ticket");
+      const navLinks = document.querySelectorAll(".nav-item");
+
+      const dashboardSection = document.getElementById("dashboard-section");
+      const newTicketSection = document.getElementById("new-ticket-section");
+
+      const newTicketForm = document.getElementById("new-ticket-form");
+
+      const statusClasses = {
+        Open: "status-open",
+        "In Progress": "status-in-progress",
+        Closed: "status-closed",
+      };
+
+      const renderTickets = (ticketsToRender) => {
+        const sortedTickets = ticketsToRender.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+
+        noResultsDiv.classList.toggle("hidden", sortedTickets.length > 0);
+
+        const ticketsHTML = sortedTickets
+          .map((ticket) => {
+            const statusClass = statusClasses[ticket.status] || "status-default";
+            return `
+              <tr>
+                <td><div class="token-id">#${ticket.tokenId}</div></td>
+                <td><div class="name">${ticket.endUser}</div></td>
+                <td><div class="issue-text">${ticket.issue}</div></td>
+                <td><div class="name">${ticket.assignedAgent}</div></td>
+                <td><span class="status-badge ${statusClass}">${ticket.status}</span></td>
+                <td><div class="date-text">${ticket.date}</div></td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        tableBody.innerHTML = ticketsHTML;
+      };
+
+      const handleSearch = () => {
+        const query = searchInput.value.toLowerCase().trim();
+        const filtered = tickets.filter(
+          (ticket) =>
+            ticket.tokenId.toString().includes(query) ||
+            ticket.endUser.toLowerCase().includes(query) ||
+            ticket.issue.toLowerCase().includes(query) ||
+            ticket.assignedAgent.toLowerCase().includes(query)
+        );
+        renderTickets(filtered);
+      };
+
+      const switchView = (targetId) => {
+        dashboardSection.classList.add("hidden");
+        newTicketSection.classList.add("hidden");
+
+        const sectionToShow = document.getElementById(targetId);
+        if (sectionToShow) {
+          sectionToShow.classList.remove("hidden");
+        }
+      };
+
+      const handleFormSubmit = (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(newTicketForm);
+        const newTicket = {
+          id: tickets.length + 1,
+          tokenId: 2025000 + tickets.length + 1,
+          endUser: formData.get("endUser"),
+          issue: formData.get("issue"),
+          status: "Open",
+          date: new Date().toISOString().split("T")[0],
+          assignedAgent: formData.get("assignedAgent"),
+        };
+
+        tickets.push(newTicket);
+        renderTickets(tickets);
+        newTicketForm.reset();
+        switchView("dashboard-section");
+      };
+
+      searchInput.addEventListener("keyup", handleSearch);
+
+      navDashboard.addEventListener("click", (e) => {
+        e.preventDefault();
+        switchView("dashboard-section");
+      });
+
+      navNewTicket.addEventListener("click", (e) => {
+        e.preventDefault();
+        switchView("new-ticket-section");
+      });
+
+      newTicketForm.addEventListener("submit", handleFormSubmit);
+
+      renderTickets(tickets);
+    </script>
+  </body>
+</html>
 {% endblock %}
