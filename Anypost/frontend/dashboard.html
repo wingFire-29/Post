@@ -1,71 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="icon" href="./assets/logo.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="dashboard.css">
-</head>
-<body>
-<div class="body">
-    <div class="header">
-        <div class="sidebar-logo">
-            <i class="fa-solid fa-check"></i>
-            <span>QuickDesk</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickDesk Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-logo-icon">
+            <i class="fa-solid fa-check-double fa-lg"></i>
+          </div>
+          <span class="sidebar-logo-text">QuickDesk</span>
         </div>
-        <div class="nav">
-            <div class="header-content active">
-                <i class="fa-solid fa-gauge"></i>
-                <a href="#">Dashboard</a>
-            </div>
-            <div class="header-content">
-                <i class="fa-solid fa-bars"></i>
-                <a href="#">New Ticket</a>
-            </div>
-            <div class="header-content">
-                <i class="fa-solid fa-flag"></i>
-                <a href="#">My Ticket</a>
-            </div>
-            <div class="header-content">
-                <i class="fa-solid fa-bell"></i>
-                <a href="#">Notifications</a>
-                
-            </div>
-            <div class="header-content">
-                <i class="fa-solid fa-user"></i>
-                <a href="#">Profile</a>
-            </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active">
+            <i class="fa-solid fa-gauge-high nav-icon"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fa-solid fa-ticket nav-icon"></i>
+            <span>New Ticket</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fa-solid fa-flag nav-icon"></i>
+            <span>My Tickets</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fa-solid fa-bell nav-icon"></i>
+            <span>Notifications</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fa-solid fa-user nav-icon"></i>
+            <span>Profile</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <h1 class="main-title">Dashboard</h1>
+
+        <div class="filters-container">
+          <h2 class="filters-title">All Tickets</h2>
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by user, agent, issue, or token..."
+              class="search-input"
+            />
+          </div>
         </div>
+
+        <div class="table-container">
+          <table class="tickets-table">
+            <thead>
+              <tr>
+                <th>Token ID</th>
+                <th>User</th>
+                <th>Issue</th>
+                <th>Assigned Agent</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="tickets-table-body"></tbody>
+          </table>
+          <div id="no-results" class="no-results-message hidden">
+            <i class="fa-solid fa-inbox"></i>
+            <p class="message-title">No matching tickets found.</p>
+            <p class="message-subtitle">Try a different search term.</p>
+          </div>
+        </div>
+      </main>
     </div>
-    
-    <div class="main-content">
-        <h1 class="dashboard-title">Dashboard</h1>
-        <div class="dashboard-filters">
-            <select>
-                <option>All Tickets</option>
-            </select>
-            <select>
-                <option>Category</option>
-            </select>
-            <select>
-                <option>Sort by:</option>
-            </select>
-            <div class="search-group">
-                <input type="text" placeholder="Search..." class="search-input">
-                <button class="search-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
-            </div>
-        </div>
-    </div>
 
-</div>        
-            
-    
-
-
-</body>
+    <script src="dashboard.js"></script>
+  </body>
 </html>
